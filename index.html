@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Pince de Cupidon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* Mise en page : la vitrine d'une chocolaterie le soir ; une machine à pince au centre, la boîte du bilan à côté ; chaque jeu s'ouvre en fenêtre par-dessus. Univers unique (cacao). */
+:root{
+  --cocoa:#24130f;
+  --cocoa-2:#3b1f18;
+  --panel:#43251c;
+  --panel-2:#553026;
+  --line:rgba(246,226,204,.22);
+  --cream:#f7ebdb;
+  --muted:#d2b8a2;
+  --rasp:#e0385f;
+  --rasp-deep:#9b1e3d;
+  --rose:#f4a6ba;
+  --praline:#e3ad5f;
+  --praline-deep:#a8742b;
+  --pista:#8cc47a;
+  --f-display:'Comic Sans MS', 'Comic Sans', 'Comic Neue', 'Chalkboard SE', cursive;
+  --f-body:'Comic Sans MS', 'Comic Sans', 'Comic Neue', 'Chalkboard SE', cursive;
+  color-scheme:dark;
+}
+html{background:var(--cocoa)}
+body{
+  color:var(--cream);font-family:var(--f-body);font-size:17px;line-height:1.5;min-height:100vh;
+  background:
+    radial-gradient(60% 40% at 15% 0%, rgba(224,56,95,.18), transparent 70%),
+    radial-gradient(50% 40% at 90% 10%, rgba(227,173,95,.12), transparent 70%),
+    radial-gradient(120% 80% at 50% 0%, var(--cocoa-2), var(--cocoa) 70%) var(--cocoa);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+body.lock{overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--praline);outline-offset:3px;border-radius:10px}
+
+.wrap{max-width:1100px;margin:0 auto;padding-block:20px 40px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+.eyebrow-top{margin:0;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--rose)}
+h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(2.2rem,6vw,3.5rem);line-height:1.05;text-wrap:balance}
+h1 span{color:var(--rasp)}
+.counter{display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);font-weight:700;font-variant-numeric:tabular-nums}
+.counter b{font-size:1.4rem;color:var(--praline)}
+.stage{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:start;margin-top:16px}
+@media (max-width:840px){.stage{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Machine à pince ---------- */
+.machine-col{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:0}
+.machine{width:min(410px,90vw);max-width:100%;border-radius:26px 26px 14px 14px;background:linear-gradient(180deg,var(--rasp),var(--rasp-deep));padding:12px 12px 16px;box-shadow:0 24px 50px rgba(0,0,0,.5), inset 0 2px 0 rgba(255,255,255,.25)}
+.marquee{position:relative;text-align:center;padding:10px 10px 12px;border-radius:16px 16px 8px 8px;background:var(--cocoa);border:3px solid var(--praline)}
+.marquee b{display:block;font-family:var(--f-display);font-weight:400;font-size:clamp(1.4rem,5vw,1.9rem);line-height:1.1;color:var(--rose)}
+.marquee small{color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-size:.7rem}
+.lights{display:flex;justify-content:space-between;padding:0 6px;margin-top:6px}
+.lights i{width:8px;height:8px;border-radius:50%;background:var(--praline);box-shadow:0 0 8px var(--praline);animation:blink 1.6s infinite}
+.lights i:nth-child(even){animation-delay:.8s}
+@keyframes blink{50%{opacity:.25}}
+.glass{position:relative;margin-top:10px;aspect-ratio:1/1;max-width:100%;border-radius:10px;overflow:hidden;cursor:pointer;
+  background:radial-gradient(90% 70% at 50% 100%, #5c2a35, #2a1418 70%);border:3px solid rgba(255,255,255,.18);box-shadow:inset 0 0 40px rgba(0,0,0,.6)}
+.glass::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.14) 0 18%,transparent 18% 30%,rgba(255,255,255,.07) 30% 34%,transparent 34%)}
+.rail{position:absolute;left:0;right:0;top:0;height:12px;background:linear-gradient(180deg,#c9c2bb,#7e7570);z-index:3}
+.claw{position:absolute;top:6px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:4;transition:left .9s ease-in-out}
+.carriage{width:34px;height:14px;border-radius:4px;background:#d9d2cc;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.cable{width:3px;height:22px;background:#d9d2cc;transition:height .8s ease-in-out}
+.grip{width:56px;height:40px;margin-top:-2px}
+.grip path{transition:transform .35s ease;transform-box:fill-box}
+.grip .gl{transform-origin:100% 0}
+.grip .gr{transform-origin:0 0}
+.claw.closed .grip .gl{transform:rotate(-14deg)}
+.claw.closed .grip .gr{transform:rotate(14deg)}
+.heart{position:absolute;width:15%;aspect-ratio:32/29;z-index:2;transition:transform .8s ease-in-out, opacity .45s ease}
+.heart svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45))}
+.heart span{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(.8rem,3vw,1.1rem);padding-bottom:12%}
+.chute{position:absolute;left:3%;bottom:0;width:20%;height:24%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#120808,#2a1214);border:2px solid rgba(255,255,255,.18);border-bottom:none;display:grid;place-items:end center;padding-bottom:6px;z-index:1}
+.chute small{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.reveal{position:absolute;left:50%;top:22%;transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;z-index:6;width:76%;text-align:center;padding:14px 12px;border-radius:16px;background:rgba(36,19,15,.9);border:2px solid var(--praline);transition:opacity .4s ease, transform .4s cubic-bezier(.2,1.4,.4,1)}
+.reveal.on{opacity:1;transform:translateX(-50%) scale(1)}
+.reveal .r-e{font-size:2.3rem;line-height:1}
+.reveal .r-n{font-family:var(--f-display);font-size:clamp(1.2rem,4.4vw,1.6rem);line-height:1.15;color:var(--rose);margin-top:4px;text-wrap:balance}
+.reveal .r-h{font-size:.85rem;color:var(--muted)}
+.base{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.25)}
+.coin{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--rose);letter-spacing:.08em;text-transform:uppercase}
+.coin i{width:6px;height:26px;border-radius:3px;background:#120808;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.joy{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff7b97,var(--rasp-deep));box-shadow:0 4px 0 #5e1024}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:14px;border:2px solid var(--line);background:var(--panel);font-weight:700;font-size:1rem;line-height:1.2;transition:transform .12s ease, background .2s ease}
+.btn:hover:not(:disabled){background:var(--panel-2)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn-main{background:var(--praline);border-color:var(--praline);color:var(--cocoa)}
+.btn-main:hover:not(:disabled){background:#f0c07a}
+.btn-launch{font-size:1.2rem;padding:16px 28px;border-radius:999px;box-shadow:0 6px 0 var(--praline-deep)}
+.btn-launch:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 var(--praline-deep)}
+.btn-ghost{background:transparent}
+.btn:disabled{opacity:.55}
+
+/* ---------- Panneau ---------- */
+.side{display:flex;flex-direction:column;gap:18px;min-width:0}
+.block{padding:18px;border-radius:18px;background:rgba(59,31,24,.75);border:1px solid var(--line)}
+.block h2{margin:0 0 10px;font-family:var(--f-display);font-weight:400;font-size:1.6rem;line-height:1.1;color:var(--rose)}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.seg.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:14px;border:2px solid var(--line);background:var(--panel);text-align:center}
+.opt .o-i{font-size:1.5rem;line-height:1}
+.opt .o-n{font-weight:700}
+.opt[aria-pressed="true"]{border-color:var(--praline);background:var(--panel-2);box-shadow:0 0 0 2px rgba(227,173,95,.25)}
+.desc{margin:10px 0 0;font-size:.95rem;color:var(--muted);min-height:2.9em}
+.teams-cfg{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.nb-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.nb{width:44px;height:40px;border-radius:10px;border:2px solid var(--line);background:var(--panel);font-weight:700}
+.nb[aria-pressed="true"]{border-color:var(--praline);background:var(--panel-2)}
+.team-list{display:grid;gap:8px}
+.team-row{display:flex;align-items:center;gap:10px}
+.team-row .dot{width:14px;height:14px;border-radius:50%;background:var(--tc);flex:none}
+.team-row input{flex:1;min-width:0;font:inherit;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream)}
+.team-row input:focus{border-color:var(--praline);outline:none}
+.team-row b{min-width:3ch;text-align:right;font-variant-numeric:tabular-nums;color:var(--praline)}
+.reset{margin-top:10px;background:transparent;border:none;color:var(--muted);text-decoration:underline;font-size:.9rem;padding:4px 0}
+.reset.armed{color:var(--rasp)}
+
+/* Boîte du bilan */
+.box-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+.box-t h2{margin:0}
+.box-t span{color:var(--muted);font-variant-numeric:tabular-nums}
+.ballotin{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:12px;border-radius:12px;background:linear-gradient(180deg,#f1d9c0,#d9b796);box-shadow:inset 0 0 0 4px #c39b75}
+.cav{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border-radius:12px;border:none;background:#f8ead9;color:#4a2a1d;box-shadow:inset 0 2px 6px rgba(0,0,0,.25);min-width:0}
+.cav .choc{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:1rem;border:2px dashed #c9a585;background:transparent}
+.cav.on .choc{border:none;background:radial-gradient(circle at 35% 30%,#8b5a3c,#3a1d12 70%);box-shadow:0 2px 3px rgba(0,0,0,.4), inset 0 -3px 0 rgba(0,0,0,.25)}
+.cav .c-n{font-size:.68rem;line-height:1.15;text-align:center;font-weight:700;overflow-wrap:anywhere}
+.cav:hover{background:#fff4e6}
+.how{margin:0;padding-left:1.2em;display:grid;gap:4px}
+footer{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:var(--muted);font-size:.9rem}
+footer a{color:var(--rose)}
+.foot-links{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.teach-link{background:none;border:none;padding:0;color:var(--rose);text-decoration:underline;font-size:.9rem}
+
+/* ---------- Fenêtre de jeu ---------- */
+.ov{position:fixed;inset:0;z-index:50;background:rgba(15,6,5,.82);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;
+  padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+.sheet{width:100%;max-width:840px;margin:auto 0;border-radius:22px;background:linear-gradient(180deg,#4a2820,#2f1913);border:2px solid rgba(244,166,186,.35);box-shadow:0 30px 80px rgba(0,0,0,.55);padding:20px 22px 24px}
+.sheet-head{display:flex;align-items:center;gap:14px}
+.sheet-head .g-e{font-size:2.6rem;line-height:1;flex:none}
+.sheet-head .g-t{flex:1;min-width:0}
+.sheet-head h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(1.6rem,4.5vw,2.2rem);line-height:1.1;color:var(--rose);text-wrap:balance}
+.sheet-head p{margin:2px 0 0;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 16px}
+.pill{padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.2);font-size:.9rem;font-weight:700;font-variant-numeric:tabular-nums}
+.pill.gold{color:var(--praline);border-color:rgba(227,173,95,.5)}
+.g-body{display:flex;flex-direction:column;gap:16px;min-width:0}
+.eyebrow{margin:0;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.card-word{display:flex;align-items:center;gap:14px;font-size:clamp(1.4rem,4vw,1.9rem);font-weight:700;line-height:1.15}
+.panelbox{padding:16px 18px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:1.15rem;line-height:1.5}
+.big-btn{flex:1 1 200px;padding:16px;font-size:1.05rem}
+.is-ok{background:#3f7a35!important;border-color:var(--pista)!important;color:#fff!important}
+.is-ko{background:var(--rasp-deep)!important;border-color:var(--rasp)!important;color:#fff!important}
+.small{font-size:.95rem;color:var(--muted);margin:0}
+.warn{color:#ffb0c0!important}
+.txt{flex:1 1 220px;min-width:0;font:inherit;font-size:1.2rem;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:rgba(0,0,0,.28);color:var(--cream)}
+.txt:focus{border-color:var(--praline);outline:none}
+.answer-form{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.shake-x{animation:shx .4s}
+@keyframes shx{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.feed{margin-top:16px;padding:16px 18px;border-radius:16px;border:2px solid var(--line);display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.feed.ok{background:rgba(140,196,122,.13);border-color:rgba(140,196,122,.7)}
+.feed.ko{background:rgba(224,56,95,.13);border-color:rgba(224,56,95,.65)}
+.feed p{margin:0;font-size:1.05rem}
+.feed .feed-t{font-family:var(--f-display);font-size:1.6rem;line-height:1.1}
+.feed.ok .feed-t{color:#b6e6a6}
+.feed.ko .feed-t{color:#ffadc0}
+.team-line{font-weight:700;color:var(--tc)!important}
+.tboard{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tpill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.2);font-weight:700;font-variant-numeric:tabular-nums}
+.tpill i{width:10px;height:10px;border-radius:50%;background:var(--tc)}
+.tpill b{color:var(--praline)}
+.turn{margin-bottom:14px;padding:12px 16px;border-radius:14px;border:2px solid var(--tc);background:rgba(0,0,0,.25);font-family:var(--f-display);font-size:clamp(1.4rem,4vw,1.9rem);line-height:1.15}
+
+/* Rappel */
+.intro{display:flex;flex-direction:column;gap:12px}
+.how-list{margin:0;padding-left:1.4em;display:grid;gap:8px;font-size:1.12rem}
+.how-list li::marker{color:var(--praline);font-weight:700}
+.memo{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.memo-card{padding:14px 16px;border-radius:14px;background:#f7ebdb;color:#2b1710;min-width:0}
+.memo-card h3{margin:0 0 4px;font-size:1.25rem;color:var(--rasp-deep)}
+.memo-card ul{margin:0;padding-left:1.1em;display:grid;gap:4px}
+.tip{margin:0;padding:12px 14px;border-radius:12px;border:1px dashed rgba(227,173,95,.6);background:rgba(227,173,95,.08)}
+.tip b{color:var(--praline)}
+.btn-go{align-self:flex-start;font-size:1.15rem;padding:14px 28px}
+
+/* Speed-dating */
+.date-zone{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.5fr);gap:12px;align-items:stretch}
+@media (max-width:600px){.date-zone{grid-template-columns:minmax(0,1fr)}.date-zone .vs{display:none}}
+.date-card{padding:16px;border-radius:16px;background:#f7ebdb;color:#2b1710;display:flex;flex-direction:column;gap:6px;min-width:0}
+.date-card .who{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rasp-deep);font-weight:700}
+.date-card .big{font-size:1.5rem;font-weight:700;line-height:1.2}
+.date-card .def{font-size:1.12rem;line-height:1.45}
+.vs{display:grid;place-items:center;font-size:2rem}
+.timer{height:8px;border-radius:4px;background:rgba(0,0,0,.15);overflow:hidden;margin-top:auto}
+.timer i{display:block;height:100%;background:var(--rasp);transform-origin:left;animation:shrink linear forwards}
+@keyframes shrink{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.flip-in{animation:flipin .35s ease}
+@keyframes flipin{from{transform:rotateY(70deg);opacity:.2}to{transform:none;opacity:1}}
+
+/* Lettres fondues */
+.melt-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.lt{width:40px;height:48px;border-radius:9px;display:grid;place-items:center;font-size:1.4rem;font-weight:700;background:#f7ebdb;color:#2b1710}
+.lt.m{background:radial-gradient(circle at 35% 30%,#7a4a30,#3a1d12 75%);border-radius:50% 50% 45% 45%/60% 60% 40% 40%;color:transparent}
+.lt.sp{background:transparent;width:16px}
+.lt.rev{background:var(--praline);color:var(--cocoa)}
+
+/* Swipe */
+.swipe-zone{display:flex;flex-direction:column;align-items:center;gap:14px}
+.sw-card{width:min(340px,100%);min-height:150px;padding:18px;border-radius:18px;background:#f7ebdb;color:#2b1710;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px;box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .45s ease, opacity .45s ease}
+.sw-card .sw-k{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rasp-deep);font-weight:700}
+.sw-card .sw-t{font-size:1.3rem;font-weight:700;line-height:1.25}
+.sw-card.goL{transform:translateX(-140%) rotate(-18deg);opacity:0}
+.sw-card.goR{transform:translateX(140%) rotate(18deg);opacity:0}
+.sw-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(420px,100%)}
+.sw-btns .btn{padding:16px 10px;font-size:1.15rem}
+
+/* Étiquette */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 14px;border-radius:10px;border:2px solid var(--line);background:var(--panel);font-weight:700}
+.chip.sel{outline:3px solid var(--praline);outline-offset:2px}
+.chip.used{opacity:.25}
+.label{padding:18px;border-radius:12px;background:#fffaf2;color:#2b1710;border:2px solid #d9b796;display:grid;gap:8px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.label-h{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px dashed #d9b796;padding-bottom:8px;font-family:var(--f-display);color:var(--rasp-deep);font-size:1.2rem}
+.field{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:10px;align-items:center;text-align:left;padding:8px 10px;border-radius:10px;border:2px dashed #e1c8a8;background:#fff;color:#2b1710}
+@media (max-width:520px){.field{grid-template-columns:minmax(0,1fr)}}
+.field .f-l{font-size:.85rem;font-weight:700;color:#a07d5c;border-radius:6px;padding:4px 6px;background:#f6eadb;text-align:center}
+.field.done{border-style:solid;border-color:#5d9a4c}
+.field.done .f-l{background:#5d9a4c;color:#fff}
+.field.sel{border-color:var(--rasp)}
+
+/* Rayon */
+.shelf{display:flex;flex-direction:column;gap:0;border-radius:12px;overflow:hidden;border:4px solid #6b4430;background:#2b1710}
+.lvl-btn{display:grid;grid-template-columns:minmax(0,8.5em) minmax(0,1fr);gap:10px;align-items:center;min-height:70px;padding:10px 12px;border:none;border-bottom:6px solid #8a5a3c;background:linear-gradient(180deg,#3b2118,#2f1913);text-align:left}
+.lvl-btn:last-child{border-bottom:none}
+.lvl-btn:hover{background:#4a2a1f}
+.lvl-btn .l-n{font-family:var(--f-display);font-size:1.25rem;line-height:1.1;color:var(--praline)}
+.lvl-btn .l-n small{display:block;font-family:var(--f-body);font-size:.8rem;color:var(--muted)}
+.lvl-btn .l-in{display:flex;flex-wrap:wrap;gap:6px}
+.mini{padding:4px 9px;border-radius:8px;font-size:.85rem;font-weight:700;background:rgba(140,196,122,.3);border:1px solid var(--pista)}
+.mini.bad{background:rgba(224,56,95,.25);border-color:var(--rasp)}
+.tas{display:flex;flex-wrap:wrap;gap:8px}
+.prod{display:flex;flex-direction:column;align-items:flex-start;padding:9px 12px;border-radius:10px;border:2px solid var(--line);background:#f7ebdb;color:#2b1710;text-align:left;line-height:1.25;max-width:100%}
+.prod b{font-size:1rem}
+.prod small{color:#6b4a36}
+.prod.sel{outline:3px solid var(--praline);outline-offset:2px}
+
+/* 5 sens */
+.senses{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.senses{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.sense{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;border-radius:14px;border:2px solid var(--line);background:var(--panel);font-weight:700}
+.sense span:first-child{font-size:2rem;line-height:1}
+
+/* Memory */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.mcard{position:relative;min-height:110px;padding:10px;border-radius:14px;border:2px solid var(--line);background:repeating-linear-gradient(45deg,var(--rasp-deep) 0 10px,#86183a 10px 20px);color:transparent;font-size:.92rem;line-height:1.3;text-align:center}
+.mcard::after{content:"♥";position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;color:rgba(255,255,255,.5)}
+.mcard.up,.mcard.found{background:#f7ebdb;color:#2b1710;border-color:#d9b796}
+.mcard.up::after,.mcard.found::after{content:none}
+.mcard.term.up,.mcard.term.found{font-weight:700;font-size:1.05rem}
+.mcard.found{border-color:var(--pista);box-shadow:0 0 0 3px rgba(140,196,122,.4)}
+
+/* Erreurs de Yanis */
+.today{align-self:flex-start;padding:6px 12px;border-radius:999px;background:var(--rasp);color:#fff;font-weight:700}
+.ygrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px;border-radius:12px;background:#2b1710;border:4px solid #6b4430}
+@media (max-width:560px){.ygrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.slot{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:12px;border-radius:10px;border:2px solid transparent;background:#f7ebdb;color:#2b1710;line-height:1.3;min-width:0}
+.slot b{font-size:1rem}
+.slot small{font-size:.88rem;color:#5a3a2a}
+.slot:hover:not(:disabled){border-color:var(--praline)}
+.step2{display:flex;flex-direction:column;gap:8px}
+
+/* Mot de Mme Laurent */
+.note{padding:20px 22px;border-radius:6px;background:#fff6e8;color:#2b1710;line-height:2.1;font-size:1.12rem;box-shadow:0 10px 24px rgba(0,0,0,.35);background-image:repeating-linear-gradient(180deg,transparent 0 33px,rgba(155,30,61,.12) 33px 34px)}
+.note .sig{display:block;text-align:right;font-family:var(--f-display);color:var(--rasp-deep);margin-top:6px}
+.blank{display:inline-block;min-width:7em;padding:0 10px;margin:0 2px;border-radius:8px;border:2px dashed #c9a585;background:#fff;color:#2b1710;font-weight:700;line-height:1.6}
+.blank.sel{border-color:var(--rasp);border-style:solid}
+.blank.f{border-style:solid;border-color:#a07d5c;background:#f6eadb}
+.blank.ok{background:#d6efcc;border-color:#5d9a4c}
+.blank.ko{background:#ffd6de;border-color:var(--rasp)}
+.bank{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Bilan */
+.bilan{text-align:center;display:flex;flex-direction:column;gap:2px;align-items:center}
+.bilan .big{font-family:var(--f-display);font-size:clamp(3rem,10vw,4.4rem);line-height:1;color:var(--praline);margin:0;font-variant-numeric:tabular-nums}
+.bilan .big-l{margin:0;color:var(--muted);font-weight:700}
+.bilan .msg{margin:10px 0 0;font-size:1.15rem}
+.podium{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.podium-t{margin:0;font-family:var(--f-display);font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.15;color:var(--praline);text-wrap:balance}
+.rank{margin:0;padding:0;list-style:none;display:grid;gap:8px;width:min(420px,100%)}
+.rank li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,.22);border:2px solid var(--tc);font-size:1.1rem}
+.msg-team{margin:0;text-align:center;color:var(--muted)}
+.vedette{padding:18px;border-radius:16px;background:#f7ebdb;color:#2b1710;display:flex;flex-direction:column;gap:6px}
+.vedette .eyebrow{color:var(--rasp-deep)}
+.vedette h3{margin:0;font-size:1.45rem}
+.vedette p{margin:0}
+.vedette .ex{font-style:italic;color:#6b4a36}
+
+/* Espace enseignant */
+.tsheet{width:100%;max-width:1000px;margin:auto 0;border-radius:18px;background:#fbf3e7;color:#2b1710;padding:20px 22px 26px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.t-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.t-head h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:2rem;color:var(--rasp-deep)}
+.tsheet .btn{background:#fff;color:#2b1710;border-color:#d9c3a6}
+.tsheet .btn-main{background:var(--praline);border-color:var(--praline)}
+.tsheet .txt{background:#fff;color:#2b1710;border-color:#d9c3a6}
+.t-gate{display:flex;flex-direction:column;gap:10px;margin-top:14px;max-width:420px}
+.t-gate p{margin:0}
+.t-err{color:#b0232d;font-weight:700;min-height:1.4em}
+.t-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:14px 0}
+.switch{display:flex;gap:10px;align-items:flex-start;flex:1 1 320px;cursor:pointer;font-weight:700}
+.switch input{width:22px;height:22px;accent-color:var(--rasp-deep);flex:none;margin-top:2px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid #d9c3a6;margin-bottom:14px}
+.tab{padding:9px 14px;border:none;border-radius:10px 10px 0 0;background:transparent;color:#6b4a36;font-weight:700}
+.tab[aria-selected="true"]{background:var(--rasp-deep);color:#fff}
+.tpanel h3{margin:18px 0 8px;color:var(--rasp-deep);font-size:1.2rem}
+.t-intro{margin:0 0 10px;color:#6b4a36}
+.t-scroll{overflow-x:auto}
+.t-table{width:100%;border-collapse:collapse;font-size:.95rem;background:#fff}
+.t-table th{text-align:left;background:#f1e3cd;padding:8px 10px;border:1px solid #e0cbab}
+.t-table td{padding:8px 10px;border:1px solid #ecdcc3;vertical-align:top}
+.t-fill{font-weight:700;background:#fde2ea;padding:0 4px;border-radius:4px}
+.print-only{display:none}
+.corr-only,.corr-tag{display:none}
+body.corr .corr-only{display:block;margin:0;padding:8px 12px;border-radius:10px;background:rgba(227,173,95,.15);border:1px dashed var(--praline);color:var(--praline)}
+body.corr .corr-tag{display:inline;font-weight:400;font-size:.85em;color:var(--rasp-deep)}
+body.corr [data-correct]{position:relative}
+body.corr [data-correct]::after{content:"★";position:absolute;top:4px;right:8px;color:var(--praline);font-size:1.2rem;text-shadow:0 0 4px rgba(0,0,0,.7)}
+body.corr .mcard[data-n]::before{content:attr(data-n);position:absolute;top:4px;left:6px;display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:var(--praline);color:var(--cocoa);font-weight:700;font-size:.8rem;z-index:1}
+.corr-banner{margin:0 0 12px;padding:8px 12px;border-radius:10px;background:rgba(227,173,95,.15);border:1px solid var(--praline);color:var(--praline);font-weight:700}
+.corr-banner button{margin-left:8px;background:none;border:none;color:var(--cream);text-decoration:underline;font-weight:700}
+
+@media (prefers-reduced-motion:reduce){
+  .claw,.cable,.heart,.grip path,.sw-card,.reveal{transition:none!important}
+  .lights i,.shake-x,.flip-in{animation:none!important}
+}
+@media print{
+  html,body{background:#fff!important;color:#000}
+  body>*:not(#tov){display:none!important}
+  #tov{position:static;display:block!important;background:#fff;padding:0;overflow:visible}
+  .tsheet{box-shadow:none;border-radius:0;padding:0;background:#fff;max-width:none}
+  .t-actions,.tabs,.t-close,.t-gate{display:none!important}
+  .tpanel{display:block!important;break-before:page}
+  .tpanel:first-child{break-before:auto}
+  .print-only{display:block;font-family:var(--f-display);color:#9b1e3d;margin:0 0 8px}
+  .t-table{font-size:10.5pt}
+  .t-table tr{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow-top">Les Délices de Léonie · Scénario 5</p>
+      <h1>La Pince <span>de Cupidon</span></h1>
+    </div>
+    <div class="counter" aria-live="polite"><span aria-hidden="true">🍫</span><b id="score">0</b><span>chocolats gagnés</span></div>
+  </header>
+
+  <main class="stage">
+    <section class="machine-col" aria-label="La machine à pince">
+      <div class="machine">
+        <div class="marquee"><b>Les mots du métier</b><small>Une pince · un cœur · un jeu</small>
+          <div class="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="glass" id="glass" aria-hidden="true">
+          <div class="rail"></div>
+          <div class="claw" id="claw">
+            <div class="carriage"></div>
+            <div class="cable" id="cable"></div>
+            <svg class="grip" viewBox="0 0 56 40"><rect x="20" y="0" width="16" height="9" rx="3" fill="#d9d2cc"/>
+              <path class="gl" d="M22 8 L8 22 L12 38 L16 36 L14 24 L26 12 Z" fill="#c9c2bb"/>
+              <path class="gr" d="M34 8 L48 22 L44 38 L40 36 L42 24 L30 12 Z" fill="#c9c2bb"/></svg>
+          </div>
+          <div id="hearts"></div>
+          <div class="chute"><small>Sortie</small></div>
+          <div class="reveal" id="reveal"><div class="r-e" id="rE"></div><div class="r-n" id="rN"></div><div class="r-h">Cupidon a choisi !</div></div>
+        </div>
+        <div class="base" aria-hidden="true"><span class="coin"><i></i>1 jeton = 1 jeu</span><span class="joy"></span></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-main btn-launch" id="launchBtn">Lancer la pince</button>
+        <button class="btn" id="playBtn" hidden>Jouer</button>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="block">
+        <h2>Mode de jeu</h2>
+        <div class="seg two" role="group" aria-label="Mode de jeu">
+          <button class="opt" data-mode="solo" aria-pressed="true"><span class="o-i" aria-hidden="true">🧑</span><span class="o-n">Solo</span></button>
+          <button class="opt" data-mode="teams" aria-pressed="false"><span class="o-i" aria-hidden="true">👥</span><span class="o-n">Équipes</span></button>
+        </div>
+        <p class="desc" id="modeDesc"></p>
+        <div id="teamsCfg" class="teams-cfg" hidden>
+          <div class="nb-row" role="group" aria-label="Nombre d’équipes"><span>Nombre d’équipes :</span>
+            <button class="nb" data-n="2">2</button><button class="nb" data-n="3">3</button><button class="nb" data-n="4">4</button></div>
+          <div id="teamList" class="team-list"></div>
+          <button class="reset" id="resetTeams">Remettre les scores des équipes à zéro</button>
+        </div>
+      </div>
+      <div class="block">
+        <h2>Ton niveau</h2>
+        <div class="seg" role="group" aria-label="Niveau">
+          <button class="opt lvl" data-l="1" aria-pressed="true"><span class="o-i" aria-hidden="true">🍬</span><span class="o-n">Bonbon</span></button>
+          <button class="opt lvl" data-l="2" aria-pressed="false"><span class="o-i" aria-hidden="true">🍫</span><span class="o-n">Praline</span></button>
+          <button class="opt lvl" data-l="3" aria-pressed="false"><span class="o-i" aria-hidden="true">🏆</span><span class="o-n">Grand cru</span></button>
+        </div>
+        <p class="desc" id="lvlDesc"></p>
+      </div>
+      <div class="block">
+        <div class="box-t"><h2>La boîte du bilan</h2><span id="boxCount">0 / 10</span></div>
+        <p class="small" style="margin-bottom:10px">Chaque jeu réussi dépose un chocolat. Clique sur une case pour choisir un jeu directement.</p>
+        <div class="ballotin" id="ballotin"></div>
+        <button class="reset" id="resetBtn">Vider la boîte</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <span>Les Délices de Léonie · Scénario 5 · 1CAP EPC</span>
+    <span class="foot-links"><a href="https://mariefrison.github.io/S5_Operation_Saint_Valentin_CAP_EPC.html/" target="_blank" rel="noopener">Retour à l’Opération Saint-Valentin</a>
+    <button class="teach-link" id="teachBtn">Espace enseignant</button></span>
+  </footer>
+</div>
+
+<div class="ov" id="tov" hidden role="dialog" aria-modal="true" aria-labelledby="tTitle">
+  <div class="tsheet">
+    <div class="t-head"><h2 id="tTitle">Espace enseignant</h2><button class="btn btn-ghost t-close" id="tClose">Fermer</button></div>
+    <div id="tGate" class="t-gate">
+      <p>Saisissez le code enseignant pour voir les corrigés.</p>
+      <form id="tForm" class="answer-form"><input class="txt" id="tCode" type="password" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Code enseignant" placeholder="Code à 4 chiffres"><button class="btn btn-main" type="submit">Entrer</button></form>
+      <p class="t-err" id="tErr" role="status"></p>
+    </div>
+    <div id="tContent" hidden>
+      <div class="t-actions">
+        <label class="switch"><input type="checkbox" id="corrToggle"><span>Mode correction au tableau : la bonne réponse est marquée d’une étoile ★ pendant les jeux.</span></label>
+        <button class="btn" id="tPrint" type="button">Imprimer le corrigé</button>
+      </div>
+      <div class="tabs" role="tablist" id="tTabs"></div>
+      <div id="tPanels"></div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov" hidden role="dialog" aria-modal="true" aria-labelledby="gTitle">
+  <div class="sheet">
+    <div class="sheet-head"><span class="g-e" id="gE" aria-hidden="true"></span><div class="g-t"><h2 id="gTitle"></h2><p id="gSub"></p></div></div>
+    <div class="meta">
+      <span class="pill" id="gLevel"></span><span class="pill" id="gProg"></span><span class="pill gold" id="gScore"></span>
+      <button class="btn btn-ghost" id="gClose" style="margin-left:auto;padding:6px 14px">Retour à la machine</button>
+    </div>
+    <p class="corr-banner" id="corrBanner" hidden>★ Mode correction actif : les bonnes réponses sont marquées. <button type="button" id="corrOff">Désactiver</button></p>
+    <div class="tboard" id="gBoard" hidden></div>
+    <div class="turn" id="gTurn" hidden></div>
+    <div class="g-body" id="gBody"></div>
+    <div class="feed" id="gFeed" hidden></div>
+  </div>
+</div>
+
+<script>
+/* ===================== Vocabulaire ===================== */
+const CATS={app:'Approvisionner',imp:'Implanter',val:'Mettre en valeur',sig:'Signalétique'};
+const W=[
+{id:'fam',e:'🧺',m:'Famille de produits',cat:'app',ok:['famille de produits','famille'],
+ d:'Groupe de produits de même nature, que l’on range ensemble.',
+ s:'On sépare les chocolats, la confiserie, la pâtisserie fraîche, l’épicerie fine et les emballages cadeaux.'},
+{id:'rea',e:'🔁',m:'Réassort',cat:'app',ok:['réassort'],
+ d:'Remise en rayon de produits depuis la réserve.',
+ s:'Il ne reste que 2 coffrets cœur sur la table : Yanis va en chercher en réserve pour remplir.'},
+{id:'rup',e:'🚫',m:'Rupture',cat:'app',ok:['rupture','rupture de stock'],
+ d:'Produit absent du rayon : le client ne peut plus l’acheter.',
+ s:'Une cliente cherche les sucettes cœur : leur place est vide, il n’y en a plus.'},
+{id:'fefo',e:'⏳',m:'FEFO',cat:'app',ok:['fefo','premier périmé premier sorti'],say:'FEFO',
+ d:'Premier périmé, premier sorti : le produit qui a la date la plus proche est placé devant.',
+ s:'On place devant les ballotins du 28/02, et au fond ceux du 31/05.'},
+{id:'dlc',e:'📅',m:'DLC',cat:'app',ok:['dlc','date limite de consommation'],
+ d:'Date limite de consommation : « à consommer jusqu’au… ». Après cette date, le produit ne doit plus être vendu.',
+ s:'La boîte de macarons frais porte « à consommer jusqu’au 12/02 ».'},
+{id:'ddm',e:'🗓️',m:'DDM',cat:'app',ok:['ddm','date de durabilité minimale'],
+ d:'Date de durabilité minimale : « à consommer de préférence avant le… ». Après, le produit peut perdre du goût, mais il reste consommable.',
+ s:'Le ballotin indique « à consommer de préférence avant le 30/04 ».'},
+{id:'bal',e:'🎁',m:'Ballotin',cat:'app',ok:['ballotin'],
+ d:'Boîte rigide pour des chocolats vendus au poids.',
+ s:'À l’atelier, on remplit une boîte rigide de 250 g de pralinés, vendue au poids.'},
+{id:'plano',e:'🗺️',m:'Planogramme',cat:'imp',ok:['planogramme'],
+ d:'Plan qui indique la place de chaque produit dans le rayon.',
+ s:'Mme Laurent donne un plan qui montre où va chaque produit sur l’étagère.'},
+{id:'impl',e:'📐',m:'Implantation',cat:'imp',ok:['implantation'],
+ d:'Façon de disposer les produits dans le rayon ou dans le magasin.',
+ s:'On installe la table centrale et l’étagère murale près de la vitrine en suivant le plan.'},
+{id:'fac',e:'👀',m:'Facing',cat:'imp',ok:['facing','facings'],
+ d:'Produit vu de face par le client. Le nombre de facings, c’est le nombre de produits côte à côte sur le devant du rayon.',
+ s:'Sur le devant de l’étagère, on aligne 4 coffrets cœur côte à côte, étiquette tournée vers le client.'},
+{id:'chap',e:'🎩',m:'Niveau chapeau',cat:'imp',ok:['niveau chapeau','chapeau'],
+ d:'Étagère la plus haute : produits légers et volumineux, visibles de loin.',
+ s:'On pose les grandes boîtes cœur, légères, tout en haut pour qu’on les voie depuis l’entrée.'},
+{id:'yeux',e:'👁️',m:'Niveau des yeux',cat:'imp',ok:['niveau des yeux','yeux','niveau yeux'],
+ d:'Étagère à hauteur du regard : produits à vendre en priorité.',
+ s:'Le coffret pralinés cœur, produit vedette, est placé à hauteur du regard.'},
+{id:'mains',e:'✋',m:'Niveau des mains',cat:'imp',ok:['niveau des mains','mains','niveau mains'],
+ d:'Étagère à hauteur de main : petits produits, achats d’impulsion.',
+ s:'Les sucettes cœur à 2 € sont posées à portée de main.'},
+{id:'sol',e:'🧱',m:'Niveau du sol',cat:'imp',ok:['niveau du sol','sol','niveau sol'],
+ d:'Étagère du bas : produits lourds.',
+ s:'Les pots de pâte à tartiner de 1 kg sont rangés tout en bas.'},
+{id:'theat',e:'🎭',m:'Théâtralisation',cat:'val',ok:['théâtralisation'],
+ d:'Mise en scène de l’offre pour attirer le client et lui donner envie.',
+ s:'Nappe rouge, cœurs suspendus et grand ruban : la table raconte une histoire d’amour.'},
+{id:'sens',e:'🌹',m:'Marketing sensoriel',cat:'val',ok:['marketing sensoriel'],
+ d:'Solliciter les cinq sens du client (vue, ouïe, odorat, goût, toucher) pour lui donner envie d’acheter.',
+ s:'Musique douce, odeur de chocolat chaud et dégustation à la pince.'},
+{id:'eph',e:'⏱️',m:'Espace éphémère',cat:'val',ok:['espace éphémère'],
+ d:'Espace de vente installé pour une courte période, autour d’un événement.',
+ s:'La table Saint-Valentin est installée jusqu’au 14 février, puis démontée.'},
+{id:'imp',e:'⚡',m:'Achat d’impulsion',cat:'val',ok:['achat d’impulsion','achat d impulsion','achat impulsion','impulsion'],
+ d:'Achat non prévu, décidé sur le moment en voyant le produit.',
+ s:'Un client venu pour du thé ajoute une sucette cœur en passant devant la caisse.'},
+{id:'vit',e:'🪟',m:'Vitrine',cat:'val',ok:['vitrine'],
+ d:'Espace visible depuis la rue, qui présente les produits pour attirer les passants.',
+ s:'Depuis le trottoir, les passants voient les coffrets cœur exposés derrière la grande vitre.'},
+{id:'sign',e:'🪧',m:'Signalétique',cat:'sig',ok:['signalétique'],
+ d:'Ensemble des panneaux, affiches et étiquettes qui informent et guident le client.',
+ s:'Prix, affiche des horaires, chevalet allergènes : on installe tout ce qui informe le client.'},
+{id:'ilv',e:'🏷️',m:'ILV',cat:'sig',ok:['ilv','information sur le lieu de vente'],
+ d:'Information sur le lieu de vente : support créé par la boutique pour informer le client.',
+ s:'L’ardoise écrite par Mme Laurent et le chevalet allergènes de la boutique.'},
+{id:'plv',e:'🛍️',m:'PLV',cat:'sig',ok:['plv','publicité sur le lieu de vente'],
+ d:'Publicité sur le lieu de vente : support fourni par une marque pour mettre en avant ses produits.',
+ s:'Le présentoir de la marque de thé et le stop-rayon de la pâte à tartiner.'},
+{id:'pkg',e:'🧮',m:'Prix au kilo',cat:'sig',ok:['prix au kilo','prix au kg','prix au kilogramme'],
+ d:'Prix pour 1 kg du produit. Il permet de comparer des produits de poids différents.',
+ s:'Le coffret de 200 g coûte 6,90 € : 6,90 ÷ 0,200 = 34,50 € le kg.'},
+{id:'all',e:'⚠️',m:'Allergènes',cat:'sig',ok:['allergènes','allergène'],
+ d:'Substances qui peuvent provoquer une allergie (lait, noisettes, œufs…). Elles sont mises en évidence sur l’étiquette.',
+ s:'Sur l’étiquette du ballotin, « LAIT » et « NOISETTES » sont écrits en gras.'},
+{id:'pre',e:'📦',m:'Préemballé',cat:'sig',ok:['préemballé','pré-emballé','produit préemballé'],
+ d:'Produit emballé avant la vente, hors de la présence du client.',
+ s:'Les ballotins sont emballés à l’atelier le matin, avant l’ouverture.'},
+{id:'den',e:'🔤',m:'Dénomination',cat:'sig',ok:['dénomination','dénomination de vente'],
+ d:'Nom qui dit ce qu’est le produit. Elle est obligatoire sur l’étiquette.',
+ s:'Sur l’étiquette : « Assortiment de chocolats pralinés ».'},
+{id:'pn',e:'⚖️',m:'Poids net',cat:'sig',ok:['poids net'],
+ d:'Poids du produit seul, sans l’emballage.',
+ s:'La boîte pleine pèse 280 g, les chocolats seuls 250 g : on écrit 250 g sur l’étiquette.'}
+];
+const WID=Object.fromEntries(W.map(w=>[w.id,w]));
+
+/* ===================== Outils ===================== */
+const $=s=>document.querySelector(s);
+function h(tag,props={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(props||{})){if(v==null)continue;if(k==='class')e.className=v;else if(k==='html')e.innerHTML=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v)}for(const c of kids.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c))}return e}
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const sample=(a,n)=>shuffle(a).slice(0,n);
+const pickOne=a=>a[Math.random()*a.length|0];
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function norm(s){return String(s).toLowerCase().replace(/[’`]/g,"'").trim().replace(/^(le |la |les |un |une |des |de la |du |l')\s*/,'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9&]/g,'')}
+const isRight=(v,w)=>v.trim()!==''&&w.ok.some(a=>norm(a)===norm(v));
+const euro=x=>x.toFixed(2).replace('.',',');
+function distract(w,k){const same=shuffle(W.filter(o=>o!==w&&o.cat===w.cat)),diff=shuffle(W.filter(o=>o.cat!==w.cat));const pool=state.lvl>=2?same.concat(diff):diff.concat(same);return shuffle([w,...pool.slice(0,k-1)])}
+const K=()=>[3,4,5][state.lvl-1];
+const firstSentence=d=>d.split(/(?<=\.)\s/)[0];
+
+/* ===================== État ===================== */
+const STORE='pince-cupidon-v1';
+const TEAMS_DEF=[{n:'Pralines',e:'🍫',c:'#e3ad5f'},{n:'Macarons',e:'🌸',c:'#f4a6ba'},{n:'Guimauves',e:'☁️',c:'#9fd0e8'},{n:'Truffes',e:'🟤',c:'#8cc47a'}];
+let state={lvl:1,score:0,done:{},mode:'solo',nTeams:2,names:TEAMS_DEF.map(t=>t.n),tscore:[0,0,0,0],turn:0,corr:false};
+try{const s=JSON.parse(localStorage.getItem(STORE)||'null');if(s)state=Object.assign(state,s)}catch(e){}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+const teamMode=()=>state.mode==='teams';
+const TN=()=>state.nTeams;
+const tName=k=>(state.names[k]||'').trim()||TEAMS_DEF[k].n;
+const tLabel=k=>`${TEAMS_DEF[k].e} ${tName(k)}`;
+const curTeam=()=>state.turn%TN();
+const LV={1:{n:'Bonbon',i:'🍬',d:'Je suis accompagné(e) : moins de choix, des indices offerts.'},2:{n:'Praline',i:'🍫',d:'Je me lance : plus de choix, et j’écris certains mots moi-même.'},3:{n:'Grand cru',i:'🏆',d:'Je deviens expert(e) : pièges entre mots proches, plus de vitesse, pas d’indice.'}};
+
+/* ===================== Données des jeux ===================== */
+const SWIPE=[
+{t:'Ardoise écrite par Mme Laurent',a:'ILV',p:['ILV','PLV'],k:'Support'},
+{t:'Étiquette prix de la boutique',a:'ILV',p:['ILV','PLV'],k:'Support'},
+{t:'Affiche des horaires d’ouverture',a:'ILV',p:['ILV','PLV'],k:'Support'},
+{t:'Chevalet allergènes de la boutique',a:'ILV',p:['ILV','PLV'],k:'Support'},
+{t:'Présentoir de la marque de thé',a:'PLV',p:['ILV','PLV'],k:'Support'},
+{t:'Kakémono de la marque de cartes',a:'PLV',p:['ILV','PLV'],k:'Support'},
+{t:'Stop-rayon de la marque de pâte à tartiner',a:'PLV',p:['ILV','PLV'],k:'Support'},
+{t:'Macarons frais',a:'DLC',p:['DLC','DDM'],k:'Produit'},
+{t:'Entremets au chocolat',a:'DLC',p:['DLC','DDM'],k:'Produit'},
+{t:'Tartelettes framboise du jour',a:'DLC',p:['DLC','DDM'],k:'Produit'},
+{t:'Ballotin de pralinés',a:'DDM',p:['DLC','DDM'],k:'Produit'},
+{t:'Tablette de chocolat noir',a:'DDM',p:['DLC','DDM'],k:'Produit'},
+{t:'Sachet de guimauves',a:'DDM',p:['DLC','DDM'],k:'Produit'},
+{t:'Pot de pâte à tartiner',a:'DDM',p:['DLC','DDM'],k:'Produit'},
+{t:'Boîte de thé',a:'DDM',p:['DLC','DDM'],k:'Produit'}
+];
+const SW_WHY={ILV:'ILV : support créé par la boutique pour informer.',PLV:'PLV : support fourni par une marque pour vendre ses produits.',DLC:'Produit frais très périssable : DLC, « à consommer jusqu’au… ».',DDM:'Produit qui se conserve : DDM, « à consommer de préférence avant le… ».'};
+const LABEL=[
+{f:'Assortiment de chocolats pralinés',m:'Dénomination',lv:1},
+{f:'250 g',m:'Poids net',lv:1},
+{f:'À consommer de préférence avant le 30/04/2027',m:'DDM',lv:1},
+{f:'17,25 €',m:'Prix TTC',lv:1},
+{f:'69,00 € / kg',m:'Prix au kilo',lv:1},
+{f:'Sucre, beurre de cacao, LAIT entier, NOISETTES, pâte de cacao…',m:'Ingrédients',lv:2},
+{f:'LAIT et NOISETTES écrits en gras',m:'Allergènes',lv:2}
+];
+const LABEL_DECOY=['DLC','Facing','Planogramme'];
+const KILO=[
+{p:'Coffret pralinés cœur',g:200,e:6.90},{p:'Ballotin Saint-Valentin',g:250,e:17.25},{p:'Sachet de guimauves cœur',g:150,e:4.50},
+{p:'Boîte de pâtes de fruits',g:300,e:7.20},{p:'Tablette noir 70 %',g:100,e:3.90},{p:'Lot de sucettes cœur',g:80,e:2.00},
+{p:'Chocolat en poudre',g:500,e:8.40},{p:'Pot de pâte à tartiner',g:1000,e:12.50}
+];
+const SHELF={chap:{n:'Chapeau',i:'🎩',h:'en haut'},yeux:{n:'Yeux',i:'👁️',h:'à hauteur du regard'},mains:{n:'Mains',i:'✋',h:'à portée de main'},sol:{n:'Sol',i:'🧱',h:'en bas'}};
+const PRODS=[
+{p:'Grandes boîtes cœur décoratives',i:'légères et très volumineuses',lv:'chap'},
+{p:'Peluches ours géantes',i:'légères, encombrantes, à voir de loin',lv:'chap'},
+{p:'Coffrets pralinés cœur',i:'produit vedette à vendre en priorité',lv:'yeux'},
+{p:'Ballotins Saint-Valentin 250 g',i:'nouveauté de la saison à mettre en avant',lv:'yeux'},
+{p:'Sucettes cœur à 2 €',i:'petit prix, on les prend sans y penser',lv:'mains'},
+{p:'Mini-sachets de guimauves à 1,50 €',i:'petits, achat d’impulsion',lv:'mains'},
+{p:'Pots de pâte à tartiner 1 kg',i:'lourds',lv:'sol'},
+{p:'Packs de chocolat en poudre 1 kg',i:'lourds et stables',lv:'sol'}
+];
+const SENSE_ART={vue:'la vue',ouie:'l’ouïe',odorat:'l’odorat',gout:'le goût',toucher:'le toucher'};
+const SENSES={vue:{n:'Vue',i:'👁️'},ouie:{n:'Ouïe',i:'👂'},odorat:{n:'Odorat',i:'👃'},gout:{n:'Goût',i:'👅'},toucher:{n:'Toucher',i:'🖐️'}};
+const SENS_ITEMS=[
+{t:'Éclairage chaud et guirlande lumineuse',s:'vue'},{t:'Pétales rouges et cœurs suspendus au plafond',s:'vue'},
+{t:'Playlist de chansons douces',s:'ouie'},{t:'Bruit du papier de soie qu’on froisse pour emballer',s:'ouie'},
+{t:'Odeur de chocolat chaud à l’entrée',s:'odorat'},{t:'Diffuseur senteur vanille près de la caisse',s:'odorat'},
+{t:'Dégustation de pralinés à la pince',s:'gout'},{t:'Petits morceaux de guimauve à goûter',s:'gout'},
+{t:'Nappe en velours et rubans à toucher',s:'toucher'},{t:'Coffret en papier doux à prendre en main',s:'toucher'}
+];
+const NORMALS=[
+{p:'Coffrets pralinés cœur',i:'4 facings · prix 6,90 €'},
+{p:'Tablettes noir 70 %',i:'de face · prix 3,90 €'},
+{p:'Pâtes de fruits',i:'3 facings · prix 7,20 €'},
+{p:'Sucettes cœur',i:'niveau des mains · prix 2,00 €'},
+{p:'Pots de pâte à tartiner 1 kg',i:'niveau du sol · prix 12,50 €'},
+{p:'Macarons frais',i:'DLC 16/02 · prix 1,20 € pièce'},
+{p:'Ballotins 250 g',i:'de face · devant DDM 30/04, au fond DDM 31/05'},
+{p:'Guimauves cœur',i:'sachets alignés · DDM 15/03'}
+];
+const ANOM=[
+{p:'Sucettes cœur',i:'Emplacement vide · étiquette « Sucettes cœur 2,00 € »',w:'rup'},
+{p:'Ballotins 250 g',i:'Posés de dos, le logo tourné vers le mur',w:'fac'},
+{p:'Guimauves cœur',i:'Devant : DDM 31/05 · Au fond : DDM 28/02',w:'fefo'},
+{p:'Macarons frais',i:'DLC 10/02 · prix 1,20 € pièce',w:'dlc'},
+{p:'Pots de pâte à tartiner 1 kg',i:'Placés au niveau des yeux (le plan les met au sol)',w:'plano'},
+{p:'Coffrets pralinés cœur',i:'4 facings · aucune étiquette prix',w:'sign'}
+];
+const YANIS_WORDS=['rup','fac','fefo','dlc','plano','sign'];
+const NOTES=[
+{t:'Mot pour la mise en rayon',parts:['Bonjour ! La livraison est arrivée. Range d’abord les produits par ',{w:'fam'},'. Pour la mise en rayon, applique le ',{w:'fefo'},' : les dates les plus proches devant. Suis bien le ',{w:'plano'},' et place les coffrets cœur au ',{w:'yeux'},'. Si un produit vient à manquer, fais vite le ',{w:'rea'},' !']},
+{t:'Mot pour la table centrale',parts:['Pour la table centrale, je veux une vraie ',{w:'theat'},' : nappe rouge et cœurs suspendus. Pense au ',{w:'sens'},' avec la musique douce et l’odeur de chocolat. Les sucettes vont au ',{w:'mains'},' pour favoriser l’',{w:'imp'},'. N’oublie pas : c’est un ',{w:'eph'},', on le démonte le 15 février.']},
+{t:'Mot pour les étiquettes',parts:['Vérifie chaque étiquette de ',{w:'bal'},' : la ',{w:'den'},', le ',{w:'pn'},', la ',{w:'ddm'},' et les ',{w:'all'},' en gras. L’ardoise que j’ai écrite, c’est de l’',{w:'ilv'},' ; le présentoir de thé, c’est de la ',{w:'plv'},'.']}
+];
+
+/* ===================== Moteur des jeux ===================== */
+let cur=null;
+const ov=$('#ov'),gBody=$('#gBody'),gFeed=$('#gFeed');
+const BRAVO=['Bien joué !','Exact, comme un pro !','Un vrai chocolatier !','Dans le mille !','Parfait !'];
+const OUPS=['Pas cette fois.','Raté, mais tu progresses.','Presque !','Oups, Cupidon a raté sa cible.'];
+const api={
+  timers:[],
+  later(fn,ms){const t=setTimeout(fn,ms);this.timers.push(t);return t},
+  stop(){this.timers.forEach(clearTimeout);this.timers=[]},
+  clear(){this.stop();gBody.innerHTML='';gFeed.hidden=true;return gBody},
+  rounds(n){return teamMode()?Math.ceil(n/TN())*TN():n},
+  prog(i,n){$('#gProg').textContent=`Manche ${i+1} / ${n}`;renderTurn()},
+  result(ok,msg,w,next,pts,mx){
+    this.stop();
+    pts=pts==null?(ok?1:0):pts;mx=mx==null?1:mx;
+    cur.score+=pts;cur.max+=mx;if(!ok&&w&&!cur.missed.includes(w))cur.missed.push(w);
+    let teamLine=null;
+    if(teamMode()){const t=curTeam();cur.ts[t]+=pts;state.tscore[t]+=pts;state.turn=(state.turn+1)%TN();save();
+      teamLine=h('p',{class:'team-line',style:`--tc:${TEAMS_DEF[t].c}`},`Équipe ${tLabel(t)} : +${pts} chocolat${pts>1?'s':''}`);renderBoard()}
+    updScore();
+    gFeed.className='feed '+(ok?'ok':'ko');gFeed.innerHTML='';
+    const b=h('button',{class:'btn btn-main',onclick:()=>{gFeed.hidden=true;next()}},'Continuer');
+    gFeed.append(h('p',{class:'feed-t'},ok?pickOne(BRAVO):pickOne(OUPS)),teamLine,h('p',{html:msg}),b);
+    gFeed.hidden=false;b.focus({preventScroll:true});gFeed.scrollIntoView({block:'nearest',behavior:reduced?'auto':'smooth'});
+  },
+  end(){
+    const g=cur.g;$('#gProg').textContent='Bilan';$('#gTurn').hidden=true;
+    const ratio=cur.max?cur.score/cur.max:0;
+    const newly=ratio>=.6&&!state.done[g.id];
+    if(ratio>=.6)state.done[g.id]=true;
+    state.score+=cur.score;save();renderSide();
+    const w=cur.missed[0]||pickOne(W);
+    const msg=ratio>=.9?'Parfait ! Tu parles comme un pro de la chocolaterie.':ratio>=.6?(newly?'Jeu réussi : un chocolat rejoint la boîte du bilan !':'Jeu réussi, son chocolat est déjà dans la boîte.'):'Encore un effort : rejoue pour gagner le chocolat de ce jeu.';
+    let podium=null;
+    if(teamMode()){
+      const order=[...Array(TN()).keys()].sort((a,c)=>cur.ts[c]-cur.ts[a]);const top=cur.ts[order[0]];
+      const winners=order.filter(k=>cur.ts[k]===top);
+      podium=h('div',{class:'podium'},
+        h('p',{class:'podium-t'},winners.length>1?`Égalité entre ${winners.map(tLabel).join(' et ')} !`:`L’équipe ${tLabel(winners[0])} gagne ce jeu !`),
+        h('ol',{class:'rank'},order.map(k=>h('li',{style:`--tc:${TEAMS_DEF[k].c}`},h('span',{},tLabel(k)),h('b',{},`${cur.ts[k]} chocolat${cur.ts[k]>1?'s':''}`)))),
+        h('p',{class:'small'},'Score total depuis le début : '+[...Array(TN()).keys()].map(k=>`${tName(k)} ${state.tscore[k]}`).join(' · ')));
+    }
+    const b=api.clear();
+    b.append(
+      podium||h('div',{class:'bilan'},h('p',{class:'big'},`${cur.score} / ${cur.max}`),h('p',{class:'big-l'},'chocolats gagnés'),h('p',{class:'msg'},msg)),
+      podium?h('p',{class:'msg-team'},`La classe a gagné ${cur.score} chocolat${cur.score>1?'s':''} sur ${cur.max}. `+msg):null,
+      h('div',{class:'vedette'},h('p',{class:'eyebrow'},cur.missed.length?'Le mot à revoir':'Le mot à retenir'),h('h3',{},`${w.e} ${w.m}`),h('p',{},w.d),h('p',{class:'ex'},'À la chocolaterie : '+w.s)),
+      h('div',{class:'row'},
+        h('button',{class:'btn btn-main',onclick:()=>openGame(g,true)},'Rejouer ce jeu'),
+        h('button',{class:'btn',onclick:()=>{closeGame();launch()}},'Relancer la pince'),
+        h('button',{class:'btn',onclick:closeGame},'Retour à la machine')));
+    b.querySelector('.btn-main').focus({preventScroll:true});
+  }
+};
+function updScore(){$('#gScore').textContent=`🍫 ${cur.score} chocolat${cur.score>1?'s':''}`}
+function renderTurn(){const el=$('#gTurn');if(!teamMode()){el.hidden=true;return}const t=curTeam();el.hidden=false;el.style.setProperty('--tc',TEAMS_DEF[t].c);el.textContent=`${TEAMS_DEF[t].e} À l’équipe ${tName(t)} de jouer !`}
+function renderBoard(){const el=$('#gBoard');if(!teamMode()){el.hidden=true;return}el.hidden=false;el.innerHTML='';for(let k=0;k<TN();k++)el.append(h('span',{class:'tpill',style:`--tc:${TEAMS_DEF[k].c}`},h('i',{}),`${tName(k)} `,h('b',{},String(cur?cur.ts[k]:0))))}
+function openGame(g,skipIntro){
+  cur={g,score:0,max:0,missed:[],ts:[0,0,0,0]};
+  $('#gE').textContent=g.e;$('#gTitle').textContent=g.n;$('#gSub').textContent=g.s;
+  $('#gLevel').textContent=`${LV[state.lvl].i} ${LV[state.lvl].n}`;
+  updScore();renderBoard();renderTurn();ov.hidden=false;document.body.classList.add('lock');ov.scrollTop=0;
+  api.clear();if(skipIntro)g.f(api);else intro(g);
+}
+function closeGame(){api.stop();ov.hidden=true;document.body.classList.remove('lock');$('#launchBtn').focus({preventScroll:true})}
+$('#gClose').onclick=closeGame;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)closeGame()});
+function memoCard(title,lines){return h('div',{class:'memo-card'},h('h3',{},title),h('ul',{},lines.map(([a,b])=>h('li',{},h('b',{},b?a+' : ':a),b||''))))}
+function intro(g){
+  $('#gProg').textContent='Rappel';
+  const b=api.clear();
+  const go=h('button',{class:'btn btn-main btn-go',onclick:()=>{api.clear();g.f(api)}},'C’est parti !');
+  b.append(h('div',{class:'intro'},h('p',{class:'eyebrow'},'Avant de jouer'),h('ol',{class:'how-list'},g.how().map(t=>h('li',{},t))),
+    g.memo?h('p',{class:'eyebrow'},'Petit rappel de cours'):null,g.memo?g.memo():null,
+    g.tip?h('p',{class:'tip'},h('b',{},'Astuce : '),g.tip):null,go));
+  go.focus({preventScroll:true});
+}
+function corrLine(ans){return h('p',{class:'corr-only'},'★ Réponse attendue : ',h('b',{},ans))}
+
+/* ===================== Les 10 jeux ===================== */
+const GAMES=[
+{id:'sd',e:'💘',n:'Le speed-dating des mots',s:'Le mot rencontre des définitions. Laquelle est son match ?',f:gameSD,
+ how:()=>['Le mot du métier attend sa définition.',`Les définitions défilent une par une (${[6,4.5,3.5][state.lvl-1]} secondes chacune).`,'Clique sur « C’est le match ! » quand la bonne définition apparaît. Trop tard ou mauvais match : la manche est perdue.'],
+ tip:'Lis vite le début de chaque définition : souvent, les premiers mots suffisent.'},
+{id:'mf',e:'🫕',n:'Les lettres en chocolat fondu',s:'Des lettres ont fondu : reconstitue le mot.',f:gameMF,
+ how:()=>['Lis l’indice : la définition du mot.','Certaines lettres ont fondu dans le chocolat. Écris le mot entier dans la case.','2 essais par mot : 1 chocolat par mot trouvé.'],
+ tip:'Compte les lettres et regarde celles qui restent : elles t’aident beaucoup.'},
+{id:'sw',e:'💌',n:'Le swipe de Cupidon',s:'ILV ou PLV ? DLC ou DDM ? Fais glisser la carte du bon côté.',f:gameSW,
+ how:()=>['Une carte apparaît : un support de vente ou un produit.','Clique sur le bon côté : ILV ou PLV pour les supports, DLC ou DDM pour les produits.','1 chocolat par carte bien rangée.'],
+ memo:()=>h('div',{class:'memo'},memoCard('🏷️ ILV ou PLV ?',[['ILV','créée par la boutique pour informer (prix, horaires, allergènes).'],['PLV','fournie par une marque pour vendre ses produits (présentoir, stop-rayon).']]),
+   memoCard('📅 DLC ou DDM ?',[['DLC','« à consommer jusqu’au… » : produits frais. Date dépassée = retrait de la vente.'],['DDM','« de préférence avant le… » : produits qui se conservent.']]))},
+{id:'et',e:'🏷️',n:'L’étiquette du ballotin',s:'Nomme chaque mention obligatoire de l’étiquette.',f:gameET,
+ how:()=>['Voici l’étiquette d’un ballotin préemballé.','Clique sur un nom de mention, puis sur la ligne de l’étiquette qui lui correspond.','Chaque erreur fait perdre un chocolat.'],
+ memo:()=>h('div',{class:'memo'},memoCard('📦 Sur un ballotin préemballé, il faut :',[['la dénomination',''],['les ingrédients et les allergènes mis en évidence',''],['le poids net',''],['la DDM (ou la DLC)',''],['le prix TTC et le prix au kilo','']]))},
+{id:'pk',e:'🧮',n:'Le juste prix au kilo',s:'Calcule le prix au kilo des produits Saint-Valentin.',f:gamePK,
+ how:()=>['Lis le poids et le prix du produit.',state.lvl===3?'Calcule le prix au kilo et écris-le (tu peux utiliser la calculatrice).':'Choisis le bon prix au kilo (tu peux utiliser la calculatrice).','1 chocolat par bon calcul.'],
+ memo:()=>h('div',{class:'memo'},memoCard('🧮 La formule',[['Prix au kilo = prix ÷ poids en kg',''],['200 g = 0,200 kg ; 250 g = 0,250 kg',''],['Exemple','6,90 € ÷ 0,200 kg = 34,50 € / kg']]))},
+{id:'ry',e:'🛒',n:'L’étagère de Mme Laurent',s:'Place chaque produit au bon niveau de l’étagère.',f:gameRY,
+ how:()=>['Clique sur un produit, puis sur le niveau de l’étagère où il doit aller.','Si tu te trompes, Yanis le remet au bon niveau, en rouge.','1 chocolat par produit bien placé.'],
+ memo:()=>h('div',{class:'memo'},memoCard('🗄️ Les 4 niveaux',[['🎩 Chapeau','produits légers et volumineux, visibles de loin'],['👁️ Yeux','produits à vendre en priorité'],['✋ Mains','petits produits, achats d’impulsion'],['🧱 Sol','produits lourds']]))},
+{id:'cs',e:'🌹',n:'Les cinq sens',s:'Quel sens du client est sollicité ?',f:gameCS,
+ how:()=>['Lis l’élément d’ambiance prévu pour l’espace Saint-Valentin.','Clique sur le sens qu’il sollicite : vue, ouïe, odorat, goût ou toucher.','1 chocolat par bonne réponse.'],
+ tip:'Solliciter les cinq sens du client, c’est faire du marketing sensoriel.'},
+{id:'me',e:'🍬',n:'Le memory des bonbons',s:'Retourne les bonbons et retrouve les paires mot / définition.',f:gameME,
+ how:()=>['Retourne deux bonbons : un mot et une définition.','S’ils vont ensemble, ils restent ouverts. Sinon, ils se referment : mémorise-les !',`${[4,6,8][state.lvl-1]} paires à trouver. Trop d’essais font perdre des chocolats.`],
+ tip:'Retourne d’abord les bonbons que tu n’as jamais vus.'},
+{id:'ya',e:'🔍',n:'Les erreurs de Yanis',s:'Yanis a fait une erreur dans le rayon. Trouve-la et nomme-la.',f:gameYA,
+ how:()=>['Nous sommes le 12 février. Regarde chaque case du rayon.','Clique sur la case où il y a un problème.',state.lvl===1?'Choisis le mot qui nomme le problème parmi 3.':'Choisis le mot de pro qui nomme le problème.','1 chocolat pour la case, 1 chocolat pour le mot.'],
+ tip:'Vérifie les dates, le sens des produits, les étiquettes prix et les cases vides.'},
+{id:'ml',e:'📝',n:'Le mot de Mme Laurent',s:'Complète les consignes de la gérante avec les mots du métier.',f:gameML,
+ how:()=>['Mme Laurent t’a laissé un mot avec des trous.','Clique sur un trou, puis sur le mot qui va dedans. Clique sur un trou rempli pour le vider.','Quand tout est rempli, clique sur « Vérifier » : 1 chocolat par mot juste.'],
+ tip:'Au niveau Bonbon, la première lettre de chaque mot est donnée. Aux niveaux Praline et Grand cru, attention aux mots pièges dans la banque !'}
+];
+
+/* 1. Speed-dating */
+function gameSD(api){
+  const n=api.rounds(5),list=sample(W,n);let i=0;const T=[6000,4500,3500][state.lvl-1];
+  function show(){
+    api.prog(i,n);const w=list[i],opts=distract(w,K()+1);const b=api.clear();
+    let j=0,shown=0,over=false;
+    const right=h('div',{class:'date-card flip-in'});
+    const btn=h('button',{class:'btn btn-main big-btn',onclick:()=>{if(over)return;over=true;api.stop();btn.disabled=true;const ok=opts[j]===w;
+      right.classList.add(ok?'is-ok':'is-ko');
+      api.result(ok,ok?`<b>${w.m}</b> : ${w.d}`:`Ce n’était pas le bon match. <b>${w.m}</b> : ${w.d}`,w,next)}},'💘 C’est le match !');
+    function step(){
+      if(over)return;
+      if(shown>=opts.length*2){over=true;btn.disabled=true;api.result(false,`Le temps est écoulé ! <b>${w.m}</b> : ${w.d}`,w,next);return}
+      j=shown%opts.length;shown++;
+      right.className='date-card flip-in';right.innerHTML='';
+      if(opts[j]===w)right.setAttribute('data-correct','1');else right.removeAttribute('data-correct');
+      right.append(h('span',{class:'who'},`Rendez-vous ${j+1} / ${opts.length}`),h('span',{class:'def'},opts[j].d),h('span',{class:'timer'},h('i',{style:`animation-duration:${T}ms`})));
+      api.later(step,T);
+    }
+    b.append(h('div',{class:'date-zone'},
+      h('div',{class:'date-card'},h('span',{class:'who'},'Le mot'),h('span',{class:'big'},`${w.e} ${w.m}`)),
+      h('div',{class:'vs','aria-hidden':'true'},'❤️'),right),btn);
+    step();btn.focus({preventScroll:true});
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* 2. Lettres en chocolat fondu */
+function gameMF(api){
+  const pool=W.filter(w=>w.m.replace(/[^A-Za-zÀ-ÿ]/g,'').length>=5);
+  const n=api.rounds(4),list=sample(pool,n);let i=0;
+  function show(){
+    api.prog(i,n);const w=list[i];const b=api.clear();
+    const chars=[...w.m];const idx=chars.map((c,k)=>/[A-Za-zÀ-ÿ]/.test(c)?k:-1).filter(k=>k>0);
+    const f=[.35,.5,.65][state.lvl-1];const melted=new Set(sample(idx,Math.max(1,Math.round(idx.length*f))));
+    const row=h('div',{class:'melt-row','aria-label':'Mot à reconstituer'});
+    const tiles=chars.map((c,k)=>{const t=h('span',{class:'lt'+(c===' '?' sp':melted.has(k)?' m':'')},c===' '?'':c.toUpperCase());row.append(t);return t});
+    const reveal=()=>tiles.forEach((t,k)=>{if(melted.has(k)){t.classList.remove('m');t.classList.add('rev')}});
+    let tries=0;
+    const inp=h('input',{class:'txt',id:'mf-in',type:'text',autocomplete:'off',spellcheck:'false','aria-label':'Le mot entier',placeholder:'Écris le mot entier…'});
+    const info=h('p',{class:'small',role:'status'},'2 essais.');
+    const form=h('form',{class:'answer-form',onsubmit:e=>{e.preventDefault();if(!inp.value.trim())return;
+      if(isRight(inp.value,w)){reveal();form.querySelectorAll('input,button').forEach(x=>x.disabled=true);api.result(true,`<b>${w.m}</b> : ${w.d}`,w,next);return}
+      tries++;if(tries<2){info.textContent='Ce n’est pas ce mot. Dernier essai !';info.classList.add('warn');inp.classList.remove('shake-x');void inp.offsetWidth;inp.classList.add('shake-x');inp.select();return}
+      reveal();form.querySelectorAll('input,button').forEach(x=>x.disabled=true);api.result(false,`Le mot était <b>${w.m}</b> : ${w.d}`,w,next)}},
+      inp,h('button',{class:'btn btn-main',type:'submit'},'Valider'));
+    b.append(h('p',{class:'eyebrow'},'L’indice'),h('div',{class:'panelbox'},w.d),
+      state.lvl===1?h('p',{class:'small'},'À la chocolaterie : '+w.s):null,row,info,form,corrLine(w.m));
+    inp.focus({preventScroll:true});
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* 3. Swipe de Cupidon */
+function gameSW(api){
+  const n=api.rounds(8);const pool=SWIPE;
+  const list=sample(pool,Math.min(n,pool.length));while(list.length<n)list.push(pickOne(SWIPE));
+  let i=0;
+  function show(){
+    api.prog(i,n);const c=list[i];const b=api.clear();
+    const card=h('div',{class:'sw-card'},h('span',{class:'sw-k'},c.k),h('span',{class:'sw-t'},c.t));
+    const btns=h('div',{class:'sw-btns'});
+    c.p.forEach((lab,k)=>btns.append(h('button',{class:'btn','data-correct':lab===c.a?'1':null,onclick:e=>{
+      btns.querySelectorAll('button').forEach(x=>x.disabled=true);const ok=lab===c.a;e.currentTarget.classList.add(ok?'is-ok':'is-ko');
+      card.classList.add(k===0?'goL':'goR');
+      const go=()=>api.result(ok,`<b>${c.t}</b> → <b>${c.a}</b>. ${SW_WHY[c.a]}`,WID[c.a.toLowerCase()],next);
+      reduced?go():api.later(go,450)}},k===0?`⬅ ${lab}`:`${lab} ➡`)));
+    b.append(h('div',{class:'swipe-zone'},card,btns));
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* 4. Étiquette du ballotin */
+function gameET(api){
+  $('#gProg').textContent='1 étiquette';renderTurn();
+  const fields=LABEL.filter(x=>x.lv<=(state.lvl===1?1:2));
+  const names=shuffle(fields.map(x=>x.m).concat(state.lvl===3?LABEL_DECOY:[]));
+  const b=api.clear();let sel=null,selF=null,errors=0,found=0;
+  const info=h('p',{class:'small',role:'status'},'Clique sur une mention, puis sur la ligne de l’étiquette.');
+  const chips=h('div',{class:'chips'});
+  names.forEach(nm=>chips.append(h('button',{class:'chip','data-m':nm,onclick:e=>{if(e.currentTarget.classList.contains('used'))return;if(sel)sel.classList.remove('sel');sel=e.currentTarget;sel.classList.add('sel');tryMatch()}},nm)));
+  const label=h('div',{class:'label'},h('div',{class:'label-h'},h('span',{},'Les Délices de Léonie'),h('span',{'aria-hidden':'true'},'♥')));
+  shuffle(fields).forEach(fd=>label.append(h('button',{class:'field','data-m':fd.m,onclick:e=>{const el=e.currentTarget;if(el.classList.contains('done'))return;if(selF)selF.classList.remove('sel');selF=el;el.classList.add('sel');tryMatch()}},
+    h('span',{class:'f-l'},h('span',{},'?'),h('span',{class:'corr-tag'},' '+fd.m)),h('span',{},fd.f))));
+  function tryMatch(){
+    if(!sel||!selF)return;const a=sel,f=selF;sel=selF=null;a.classList.remove('sel');f.classList.remove('sel');
+    if(a.dataset.m===f.dataset.m){f.classList.add('done');f.querySelector('.f-l').textContent=a.dataset.m;a.classList.add('used');found++;info.textContent=`Bien vu : ${a.dataset.m}.`;info.classList.remove('warn');
+      if(found===fields.length){const pts=Math.max(0,fields.length-errors);api.later(()=>api.result(errors===0,errors===0?'Étiquette complète sans erreur !':`Étiquette complète avec ${errors} erreur${errors>1?'s':''}.`,null,()=>api.end(),pts,fields.length),400)}}
+    else{errors++;info.textContent=`« ${a.dataset.m} » ne correspond pas à cette ligne.`;info.classList.add('warn');f.classList.remove('shake-x');void f.offsetWidth;f.classList.add('shake-x')}
+  }
+  b.append(h('p',{class:'eyebrow'},'Les mentions'),chips,info,label);
+}
+
+/* 5. Prix au kilo */
+function gamePK(api){
+  const n=api.rounds(4),list=sample(KILO,Math.min(n,KILO.length));while(list.length<n)list.push(pickOne(KILO));
+  let i=0;
+  function show(){
+    api.prog(i,n);const x=list[i];const b=api.clear();
+    const kg=x.g/1000,c=Math.round(x.e/kg*100)/100;
+    const calc=`${euro(x.e)} € ÷ ${String(kg).replace('.',',')} kg = <b>${euro(c)} € / kg</b>`;
+    b.append(h('div',{class:'label'},h('div',{class:'label-h'},h('span',{},x.p),h('span',{'aria-hidden':'true'},'♥')),
+      h('div',{class:'field'},h('span',{class:'f-l'},'Poids net'),h('b',{},x.g>=1000?`${x.g/1000} kg`:`${x.g} g`)),
+      h('div',{class:'field'},h('span',{class:'f-l'},'Prix TTC'),h('b',{},`${euro(x.e)} €`)),
+      h('div',{class:'field'},h('span',{class:'f-l'},'Prix au kilo'),h('b',{},'? € / kg'))));
+    if(state.lvl===1)b.append(h('p',{class:'small'},`Rappel : ${x.g} g = ${String(kg).replace('.',',')} kg. Prix au kilo = prix ÷ poids en kg.`));
+    if(state.lvl<3){
+      const wrong=[...new Set([x.e/(x.g/100),c*10,c/10,x.e*kg,c+5].map(v=>Math.round(v*100)/100))].filter(v=>v>0&&Math.abs(v-c)>.005);
+      const opts=shuffle([c,...sample(wrong,state.lvl===1?2:3)]);
+      const row=h('div',{class:'row'});
+      opts.forEach(v=>row.append(h('button',{class:'btn big-btn','data-correct':v===c?'1':null,onclick:e=>{row.querySelectorAll('button').forEach(z=>z.disabled=true);const ok=v===c;e.currentTarget.classList.add(ok?'is-ok':'is-ko');
+        api.result(ok,calc,WID.pkg,next)}},`${euro(v)} € / kg`)));
+      b.append(row);
+    }else{
+      const inp=h('input',{class:'txt',id:'pk-in',type:'text',inputmode:'decimal',autocomplete:'off','aria-label':'Prix au kilo en euros',placeholder:'Prix au kilo en €'});
+      const form=h('form',{class:'answer-form',onsubmit:e=>{e.preventDefault();const v=parseFloat(inp.value.replace(',','.').replace(/[^0-9.]/g,''));if(isNaN(v))return;
+        form.querySelectorAll('input,button').forEach(z=>z.disabled=true);api.result(Math.abs(v-c)<.015,calc,WID.pkg,next)}},inp,h('button',{class:'btn btn-main',type:'submit'},'Valider'));
+      b.append(form,corrLine(`${euro(c)} € / kg`));inp.focus({preventScroll:true});
+    }
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* 6. L'étagère */
+function gameRY(api){
+  const nb=[4,6,8][state.lvl-1];
+  const byLv=Object.keys(SHELF).map(l=>shuffle(PRODS.filter(p=>p.lv===l)));
+  let items=[];let r=0;while(items.length<nb){const p=byLv[r%4];if(p.length)items.push(p.pop());r++}
+  items=shuffle(items);$('#gProg').textContent=`${items.length} produits à placer`;renderTurn();
+  const b=api.clear();let sel=null,placed=0,good=0;
+  const tas=h('div',{class:'tas'});const info=h('p',{class:'small',role:'status'},'Clique sur un produit, puis sur le bon niveau.');
+  items.forEach((p,k)=>tas.append(h('button',{class:'prod','data-k':String(k),onclick:e=>{if(sel)sel.classList.remove('sel');sel=e.currentTarget;sel.classList.add('sel')}},
+    h('b',{},p.p),state.lvl<3?h('small',{},p.i):null,h('span',{class:'corr-tag'},'→ '+SHELF[p.lv].n))));
+  const shelf=h('div',{class:'shelf'});
+  Object.entries(SHELF).forEach(([l,s])=>{const inn=h('span',{class:'l-in'});shelf.append(h('button',{class:'lvl-btn','data-l':l,onclick:()=>{
+    if(!sel){info.textContent='Choisis d’abord un produit.';info.classList.add('warn');return}
+    const p=items[+sel.dataset.k],ok=p.lv===l;sel.remove();sel=null;placed++;
+    (ok?inn:shelf.querySelector(`[data-l="${p.lv}"] .l-in`)).append(h('span',{class:'mini'+(ok?'':' bad')},p.p));
+    if(ok){good++;info.textContent=`Bien placé : ${p.p}.`;info.classList.remove('warn')}
+    else{if(!cur.missed.includes(WID[p.lv]))cur.missed.push(WID[p.lv]);info.textContent=`Non : « ${p.p} » va au niveau ${SHELF[p.lv].n} (${WID[p.lv].d.split(' : ')[1]}).`;info.classList.add('warn')}
+    if(placed===items.length)api.later(()=>api.result(good===items.length,`${good} produit${good>1?'s':''} bien placé${good>1?'s':''} sur ${items.length}.`,null,()=>api.end(),good,items.length),400);
+  }},h('span',{class:'l-n'},`${s.i} ${s.n}`,h('small',{},s.h)),inn))});
+  b.append(h('p',{class:'eyebrow'},'Les produits de la livraison'),tas,info,shelf);
+}
+
+/* 7. Les cinq sens */
+function gameCS(api){
+  const n=api.rounds(5),list=sample(SENS_ITEMS,Math.min(n,SENS_ITEMS.length));while(list.length<n)list.push(pickOne(SENS_ITEMS));
+  let i=0;
+  function show(){
+    api.prog(i,n);const it=list[i];const b=api.clear();
+    const row=h('div',{class:'senses'});
+    Object.entries(SENSES).forEach(([k,s])=>row.append(h('button',{class:'sense','data-correct':k===it.s?'1':null,onclick:e=>{
+      row.querySelectorAll('button').forEach(z=>z.disabled=true);const ok=k===it.s;e.currentTarget.classList.add(ok?'is-ok':'is-ko');
+      if(!ok)row.querySelector(`[data-s="${it.s}"]`).classList.add('is-ok');
+      api.result(ok,`« ${it.t} » sollicite <b>${SENSE_ART[it.s]}</b>. Jouer sur les sens du client, c’est du <b>marketing sensoriel</b>.`,WID.sens,next)},'data-s':k},
+      h('span',{'aria-hidden':'true'},s.i),h('span',{},s.n))));
+    b.append(h('p',{class:'eyebrow'},'L’élément d’ambiance'),h('div',{class:'panelbox'},'🌹 '+it.t),h('p',{class:'small'},'Quel sens du client est sollicité ?'),row);
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* 8. Memory */
+function gameME(api){
+  const k=[4,6,8][state.lvl-1],list=sample(W,k);$('#gProg').textContent=`${k} paires`;renderTurn();
+  const b=api.clear();
+  const cards=shuffle(list.flatMap((w,x)=>[{w,t:true,n:x+1},{w,t:false,n:x+1}]));
+  let open=[],found=0,tries=0,lock=false;
+  const info=h('p',{class:'small',role:'status'},'Retourne deux bonbons.');
+  const grid=h('div',{class:'mgrid'});
+  cards.forEach(c=>{const el=h('button',{class:'mcard'+(c.t?' term':''),'data-n':String(c.n),'aria-label':'Bonbon caché',onclick:()=>{
+    if(lock||el.classList.contains('up')||el.classList.contains('found'))return;
+    el.classList.add('up');el.textContent=c.t?`${c.w.e} ${c.w.m}`:firstSentence(c.w.d);el.setAttribute('aria-label',el.textContent);open.push({el,c});
+    if(open.length===2){tries++;const[a,d]=open;open=[];
+      if(a.c.w===d.c.w&&a.c.t!==d.c.t){a.el.classList.add('found');d.el.classList.add('found');found++;info.textContent=`Paire trouvée : ${a.c.w.m}.`;
+        if(found===k){const pts=Math.max(0,k-Math.max(0,Math.ceil((tries-k)/2)));api.later(()=>api.result(pts===k,`Toutes les paires trouvées en ${tries} essais (le minimum est ${k}).`,null,()=>api.end(),pts,k),500)}}
+      else{lock=true;info.textContent='Ces deux bonbons ne vont pas ensemble.';api.later(()=>{[a,d].forEach(o=>{o.el.classList.remove('up');o.el.textContent='';o.el.setAttribute('aria-label','Bonbon caché')});lock=false},1100)}}
+  }});grid.append(el)});
+  b.append(info,grid);
+}
+
+/* 9. Les erreurs de Yanis */
+function gameYA(api){
+  const n=api.rounds(4);const kinds=shuffle(ANOM);let i=0;
+  function show(){
+    api.prog(i,n);const an=kinds[i%kinds.length];const b=api.clear();
+    const normals=sample(NORMALS.filter(x=>x.p!==an.p),5);
+    const slots=shuffle([...normals,an]);
+    const grid=h('div',{class:'ygrid'});const step2=h('div',{class:'step2',hidden:''});let ok1=false;
+    slots.forEach(sl=>grid.append(h('button',{class:'slot','data-correct':sl===an?'1':null,'data-a':sl===an?'1':null,onclick:e=>{
+      grid.querySelectorAll('button').forEach(z=>z.disabled=true);ok1=sl===an;e.currentTarget.classList.add(ok1?'is-ok':'is-ko');
+      if(!ok1)grid.querySelector('[data-a="1"]').classList.add('is-ok');
+      step2.hidden=false;step2.querySelector('button').focus({preventScroll:true})}},h('b',{},sl.p),h('small',{},sl.i))));
+    const w=WID[an.w];
+    const choices=state.lvl===1?shuffle([w,...sample(YANIS_WORDS.filter(x=>x!==an.w).map(x=>WID[x]),2)]):shuffle(YANIS_WORDS.map(x=>WID[x]));
+    const rr=h('div',{class:'row'});
+    choices.forEach(o=>rr.append(h('button',{class:'btn','data-correct':o===w?'1':null,onclick:e=>{rr.querySelectorAll('button').forEach(z=>z.disabled=true);const ok2=o===w;e.currentTarget.classList.add(ok2?'is-ok':'is-ko');
+      api.result(ok1&&ok2,`Le problème : <b>${an.p}</b> (${an.i}). Le mot de pro : <b>${w.m}</b>. ${w.d}`,ok2?null:w,next,(ok1?1:0)+(ok2?1:0),2)}},`${o.e} ${o.m}`)));
+    step2.append(h('p',{class:'eyebrow'},'Quel mot de pro nomme le problème ?'),rr);
+    b.append(h('span',{class:'today'},'Aujourd’hui : jeudi 12 février'),h('p',{class:'small'},'Une case du rayon pose problème. Laquelle ?'),grid,step2);
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* 10. Le mot de Mme Laurent */
+function gameML(api){
+  const n=api.rounds(1);const order=shuffle(NOTES);let i=0;
+  function show(){
+    api.prog(i,n);const note=order[i%order.length];const b=api.clear();
+    const blanks=note.parts.filter(p=>typeof p!=='string').map(p=>WID[p.w]);
+    const decoys=state.lvl===1?[]:sample(W.filter(w=>!blanks.includes(w)),state.lvl===2?1:3);
+    const fill=blanks.map(()=>null);let sel=0,checked=false;
+    const noteEl=h('div',{class:'note'});const bank=h('div',{class:'bank'});
+    const check=h('button',{class:'btn btn-main',disabled:'',onclick:verify},'Vérifier');
+    function draw(){
+      noteEl.innerHTML='';let k=0;
+      note.parts.forEach(p=>{if(typeof p==='string'){noteEl.append(p);return}
+        const idx=k++;const w=fill[idx];
+        const cls='blank'+(w?' f':'')+(idx===sel&&!checked?' sel':'')+(checked?(w===blanks[idx]?' ok':' ko'):'');
+        noteEl.append(h('button',{class:cls,type:'button',disabled:checked?'':null,onclick:()=>{if(fill[idx]){fill[idx]=null}sel=idx;draw()}},
+          w?w.m:(state.lvl===1?blanks[idx].m[0]+'…':'…'),h('span',{class:'corr-tag'},w?'':' ('+blanks[idx].m+')')))});
+      noteEl.append(h('span',{class:'sig'},'Mme Laurent'));
+      bank.innerHTML='';
+      shuffleOnce.forEach(w=>bank.append(h('button',{class:'chip'+(fill.includes(w)?' used':''),type:'button',disabled:checked||fill.includes(w)?'':null,onclick:()=>{
+        if(sel==null||sel<0)sel=fill.indexOf(null);if(sel<0)return;fill[sel]=w;const nx=fill.indexOf(null);sel=nx;draw()}},w.m)));
+      if(fill.every(Boolean)&&!checked)check.removeAttribute('disabled');else check.setAttribute('disabled','');
+    }
+    const shuffleOnce=shuffle([...new Set(blanks.concat(decoys))]);
+    function verify(){checked=true;draw();const good=fill.filter((w,k)=>w===blanks[k]).length;
+      blanks.forEach((w,k)=>{if(fill[k]!==w&&!cur.missed.includes(w))cur.missed.push(w)});
+      api.result(good===blanks.length,`${good} mot${good>1?'s':''} juste${good>1?'s':''} sur ${blanks.length}. Les mots attendus : ${blanks.map(w=>'<b>'+w.m+'</b>').join(', ')}.`,null,next,good,blanks.length)}
+    b.append(h('p',{class:'eyebrow'},note.t),noteEl,h('p',{class:'eyebrow'},'La banque de mots'),bank,check);
+    draw();
+  }
+  function next(){i++;i<n?show():api.end()}
+  show();
+}
+
+/* ===================== Espace enseignant ===================== */
+const TEACH_CODE='0214';
+let teachOpen=false;
+function applyCorr(){document.body.classList.toggle('corr',!!state.corr);$('#corrBanner').hidden=!state.corr;$('#corrToggle').checked=!!state.corr}
+$('#corrOff').onclick=()=>{state.corr=false;save();applyCorr()};
+$('#corrToggle').onchange=e=>{state.corr=e.target.checked;save();applyCorr()};
+const tov=$('#tov');
+$('#teachBtn').onclick=()=>{tov.hidden=false;document.body.classList.add('lock');
+  if(teachOpen){$('#tGate').hidden=true;$('#tContent').hidden=false}else{$('#tGate').hidden=false;$('#tContent').hidden=true;$('#tCode').value='';$('#tErr').textContent='';$('#tCode').focus()}};
+$('#tClose').onclick=()=>{tov.hidden=true;if(ov.hidden)document.body.classList.remove('lock');$('#teachBtn').focus({preventScroll:true})};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tov.hidden)$('#tClose').click()});
+$('#tForm').onsubmit=e=>{e.preventDefault();if($('#tCode').value.trim()===TEACH_CODE){teachOpen=true;$('#tGate').hidden=true;$('#tContent').hidden=false;buildTeacher()}else{$('#tErr').textContent='Code incorrect.';$('#tCode').select()}};
+$('#tPrint').onclick=()=>{try{window.print()}catch(e){}};
+let teacherBuilt=false;
+function buildTeacher(){
+  if(teacherBuilt)return;teacherBuilt=true;
+  const tabs=$('#tTabs'),panels=$('#tPanels');
+  const tbl=(head,rows)=>h('div',{class:'t-scroll'},h('table',{class:'t-table'},h('thead',{},h('tr',{},head.map(x=>h('th',{},x)))),h('tbody',{},rows.map(r=>h('tr',{},r.map(c=>h('td',{html:c})))))));
+  const noteText=n=>n.parts.map(p=>typeof p==='string'?p:`<span class="t-fill">${WID[p.w].m}</span>`).join('');
+  const sections=[
+    ['Les 27 mots',()=>[h('p',{class:'t-intro'},'Le vocabulaire utilisé par les jeux, classé par compétence. La situation sert dans le speed-dating, le memory et le niveau Bonbon.'),
+      ...Object.entries(CATS).map(([c,n])=>[h('h3',{},n),tbl(['Mot','Définition','Situation à la chocolaterie'],W.filter(w=>w.cat===c).map(w=>[`<b>${w.e} ${w.m}</b>`,w.d,w.s]))]).flat()]],
+    ['Mots de Mme Laurent',()=>[h('p',{class:'t-intro'},'Les trois mots à compléter, avec les réponses surlignées. Aux niveaux Praline et Grand cru, la banque contient 1 ou 3 mots pièges.'),
+      ...NOTES.map(n=>[h('h3',{},n.t),h('p',{html:noteText(n)})]).flat()]],
+    ['Étagère & 5 sens',()=>[h('h3',{},'L’étagère de Mme Laurent'),tbl(['Produit','Indice donné','Niveau'],PRODS.map(p=>[p.p,p.i+' (masqué en Grand cru)',`<b>${SHELF[p.lv].i} ${SHELF[p.lv].n}</b>`])),
+      h('h3',{},'Les cinq sens'),tbl(['Élément d’ambiance','Sens sollicité'],SENS_ITEMS.map(x=>[x.t,`<b>${SENSES[x.s].i} ${SENSES[x.s].n}</b>`]))]],
+    ['ILV/PLV · DLC/DDM',()=>[h('p',{class:'t-intro'},'Les cartes du swipe de Cupidon.'),tbl(['Carte','Bonne réponse'],SWIPE.map(x=>[x.t,`<b>${x.a}</b>`]))]],
+    ['Prix au kilo',()=>[h('p',{class:'t-intro'},'Calcul : prix ÷ poids en kg. En Grand cru, la réponse est acceptée à 1 centime près.'),
+      tbl(['Produit','Poids net','Prix TTC','Calcul','Prix au kilo'],KILO.map(x=>{const kg=x.g/1000;return[x.p,x.g>=1000?'1 kg':x.g+' g',euro(x.e)+' €',`${euro(x.e)} ÷ ${String(kg).replace('.',',')}`,`<b>${euro(Math.round(x.e/kg*100)/100)} € / kg</b>`]}))]],
+    ['Yanis & étiquette',()=>[h('h3',{},'Les erreurs de Yanis (12 février)'),tbl(['Produit','Ce que voit l’élève','Mot attendu'],ANOM.map(a=>[a.p,a.i,`<b>${WID[a.w].m}</b>`])),
+      h('h3',{},'L’étiquette du ballotin'),tbl(['Ligne de l’étiquette','Mention attendue','Niveaux'],LABEL.map(x=>[x.f,`<b>${x.m}</b>`,x.lv===1?'tous':'Praline, Grand cru'])),
+      h('p',{class:'t-intro'},'En Grand cru, trois mentions pièges sont ajoutées : DLC, Facing, Planogramme.')]],
+    ['Les jeux',()=>[h('p',{class:'t-intro'},'Les questions sont tirées au hasard à chaque partie. Bonbon : moins de choix, indices offerts. Praline : plus de choix, mots à écrire. Grand cru : pièges entre mots proches, plus de vitesse, pas d’indice.'),
+      tbl(['Jeu','Déroulement','Barème'],GAMES.map(g=>{const prev=state.lvl;state.lvl=2;const how=g.how();state.lvl=prev;return[`<b>${g.e} ${g.n}</b>`,how.slice(0,-1).join(' '),how[how.length-1]]})),
+      h('p',{class:'t-intro'},'Mode équipes : la main tourne à chaque manche, et le nombre de manches est arrondi pour que chaque équipe joue autant. L’étiquette, l’étagère et le memory se jouent en une seule partie par une équipe. Scores et boîte du bilan sont enregistrés dans le navigateur de l’ordinateur utilisé.')]]
+  ];
+  sections.forEach(([name,build],k)=>{
+    const id='tp-'+k;
+    const tab=h('button',{class:'tab',role:'tab',id:'tt-'+k,'aria-controls':id,'aria-selected':String(k===0),onclick:()=>{
+      tabs.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected','false'));tab.setAttribute('aria-selected','true');
+      panels.querySelectorAll('.tpanel').forEach(p=>p.hidden=p.id!==id)}},name);
+    tabs.append(tab);
+    panels.append(h('section',{class:'tpanel',id,role:'tabpanel','aria-labelledby':'tt-'+k,hidden:k===0?null:''},h('h2',{class:'print-only'},name),build()));
+  });
+}
+
+/* ===================== Panneau ===================== */
+function renderSide(){
+  $('#score').textContent=state.score;
+  const n=GAMES.filter(g=>state.done[g.id]).length;$('#boxCount').textContent=`${n} / ${GAMES.length}`;
+  const box=$('#ballotin');box.innerHTML='';
+  GAMES.forEach(g=>box.append(h('button',{class:'cav'+(state.done[g.id]?' on':''),title:g.n,onclick:()=>openGame(g)},h('span',{class:'choc','aria-hidden':'true'},g.e),h('span',{class:'c-n'},g.n))));
+  document.querySelectorAll('.lvl').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.l===state.lvl)));
+  $('#lvlDesc').textContent=LV[state.lvl].d;
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));
+  $('#modeDesc').textContent=teamMode()?'La main tourne à chaque manche : l’équipe désignée répond, les autres se taisent !':'Chaque élève joue sur son appareil, ou toute la classe joue ensemble au tableau.';
+  $('#teamsCfg').hidden=!teamMode();
+  document.querySelectorAll('.nb').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.n===state.nTeams)));
+  const tl=$('#teamList');tl.innerHTML='';
+  for(let k=0;k<state.nTeams;k++){
+    const inp=h('input',{id:'team-name-'+k,type:'text',maxlength:'20','aria-label':`Nom de l’équipe ${k+1}`,value:tName(k)});
+    inp.addEventListener('input',()=>{state.names[k]=inp.value;save()});
+    tl.append(h('div',{class:'team-row',style:`--tc:${TEAMS_DEF[k].c}`},h('span',{class:'dot'}),h('span',{'aria-hidden':'true'},TEAMS_DEF[k].e),inp,h('b',{title:'Score total'},String(state.tscore[k]))));
+  }
+}
+document.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{state.lvl=+b.dataset.l;save();renderSide()});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;state.turn=0;save();renderSide()});
+document.querySelectorAll('.nb').forEach(b=>b.onclick=()=>{state.nTeams=+b.dataset.n;state.turn=0;save();renderSide()});
+function twoStep(btn,label,action){let armed=false;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='Clique encore pour confirmer';btn.classList.add('armed');setTimeout(()=>{armed=false;btn.textContent=label;btn.classList.remove('armed')},4000);return}
+  armed=false;action();btn.textContent=label;btn.classList.remove('armed')}}
+twoStep($('#resetBtn'),'Vider la boîte',()=>{state.score=0;state.done={};save();renderSide()});
+twoStep($('#resetTeams'),'Remettre les scores des équipes à zéro',()=>{state.tscore=[0,0,0,0];state.turn=0;save();renderSide()});
+
+/* ===================== La machine à pince ===================== */
+const HEART_POS=[[30,3],[44,3],[58,3],[72,3],[86,3],[37,15],[51,15],[65,15],[79,15],[58,27]];
+const HEART_COL=['#e0385f','#7a3b26','#e3ad5f','#f4a6ba','#9b1e3d','#5a2a1a','#e0385f','#c98a4b','#f4a6ba','#9b1e3d'];
+const heartsEl=$('#hearts');
+const hearts=GAMES.map((g,k)=>{const [x,y]=HEART_POS[k];
+  const el=h('div',{class:'heart',style:`left:${x}%;bottom:${y}%;transform:translateX(-50%)`,html:`<svg viewBox="0 0 32 29"><path d="M16 28.5C16 28.5 0.5 18.5 0.5 8.6C0.5 3.9 4.2 0.5 8.6 0.5C11.8 0.5 14.6 2.3 16 5C17.4 2.3 20.2 0.5 23.4 0.5C27.8 0.5 31.5 3.9 31.5 8.6C31.5 18.5 16 28.5 16 28.5Z" fill="${HEART_COL[k]}"/><path d="M7 6.5C5.5 7.5 5 9 5.2 10.5" stroke="rgba(255,255,255,.55)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span>${g.e}</span>`});
+  heartsEl.append(el);return{el,x,y,g}});
+const glass=$('#glass'),claw=$('#claw'),cable=$('#cable'),reveal=$('#reveal'),playBtn=$('#playBtn'),launchBtn=$('#launchBtn');
+let busy=false,chosen=null,last=null;
+const wait=ms=>new Promise(r=>setTimeout(r,reduced?0:ms));
+async function launch(){
+  if(busy)return;busy=true;launchBtn.disabled=true;playBtn.hidden=true;reveal.classList.remove('on');
+  const pool=hearts.filter(hh=>hh.g!==last);const target=pickOne(pool);chosen=target.g;last=chosen;
+  const G=glass.getBoundingClientRect();
+  const heartRect=target.el.getBoundingClientRect();
+  const clawBottomNow=claw.getBoundingClientRect().bottom;
+  const baseCable=22;
+  // 1. déplacer la pince au-dessus du cœur
+  claw.classList.remove('closed');claw.style.left=target.x+'%';await wait(950);
+  // 2. descendre
+  const reach=Math.max(baseCable,baseCable+(heartRect.top-clawBottomNow)+heartRect.height*0.35);
+  cable.style.height=reach+'px';await wait(850);
+  claw.classList.add('closed');await wait(380);
+  // 3. remonter avec le cœur
+  const dy=reach-baseCable;
+  target.el.style.transform=`translateX(-50%) translateY(${-dy}px)`;cable.style.height=baseCable+'px';await wait(850);
+  // 4. aller jusqu'à la sortie
+  const chuteX=13;const dx=(chuteX-target.x)/100*G.width;
+  claw.style.left=chuteX+'%';target.el.style.transform=`translateX(calc(-50% + ${dx}px)) translateY(${-dy}px)`;await wait(950);
+  // 5. lâcher
+  claw.classList.remove('closed');target.el.style.transform=`translateX(calc(-50% + ${dx}px)) translateY(${G.height*0.1}px)`;target.el.style.opacity='0';await wait(500);
+  $('#rE').textContent=chosen.e;$('#rN').textContent=chosen.n;reveal.classList.add('on');
+  playBtn.textContent=`Jouer : ${chosen.n}`;playBtn.hidden=false;launchBtn.disabled=false;launchBtn.textContent='Relancer la pince';busy=false;playBtn.focus({preventScroll:true});
+  // le cœur revient dans la vitrine
+  setTimeout(()=>{target.el.style.transition='none';target.el.style.transform='translateX(-50%)';void target.el.offsetWidth;target.el.style.transition='';target.el.style.opacity='1'},reduced?0:700);
+}
+launchBtn.onclick=launch;glass.onclick=launch;
+playBtn.onclick=()=>{if(chosen)openGame(chosen)};
+renderSide();applyCorr();
+</script>
+</body>
+</html>
